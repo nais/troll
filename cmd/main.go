@@ -30,7 +30,6 @@ func init() {
 }
 
 func main() {
-	// Fetch the elector URL from environment variable
 	electorUrl := os.Getenv("ELECTOR_GET_URL")
 	if electorUrl == "" {
 		log.Fatal("ELECTOR_GET_URL environment variable is required")
@@ -65,6 +64,8 @@ func New(leUrl, bucket string) *Signaller {
 
 func (s *Signaller) Run() error {
 	for {
+		time.Sleep(5 * time.Second)
+
 		leader, err := leaderHostname(s.leURL)
 		if err != nil {
 			log.Printf("error getting leader hostname: %s\n", err)
@@ -84,7 +85,6 @@ func (s *Signaller) Run() error {
 			continue
 		}
 
-		time.Sleep(5 * time.Second)
 	}
 }
 
