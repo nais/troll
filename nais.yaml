@@ -1,0 +1,19 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: troll
+  namespace: n415-retreat
+spec:
+  image: {{ image }}
+  leaderElection: true
+  replicas:
+    max: 1
+    min: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 32Mi 
+  gcp:
+    buckets:
+      - name: n415-troll-guests
+        retentionPeriodDays: 2
