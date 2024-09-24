@@ -36,6 +36,9 @@ func main() {
 		log.Fatal("ELECTOR_GET_URL environment variable is required")
 	}
 
+	fmt.Println("Starting troll.")
+	fmt.Printf("Elector URL: %s\n", electorUrl)
+
 	signaller := New(electorUrl, bucketName)
 	go signaller.Run()
 
@@ -64,17 +67,23 @@ func (s *Signaller) Run() error {
 	for {
 		leader, err := leaderHostname(s.leURL)
 		if err != nil {
-			return err
+			log.Printf("error getting leader hostname: %s\n", err)
+			continue
 		}
 
 		hostname, err := os.Hostname()
 		if err != nil {
-			return err
+			log.Printf("error getting hostname: %s\n", err)
+			continue
 		}
 
 		fmt.Printf("I am the leader: %v\n", leader)
 
-		writeToBucket(leader == hostname, hostname, s.bucket)
+		if err := writeToBucket(leader == hostname, hostname, s.bucket); err != nil {
+			log.Printf("error writing to bucket: %s\n", err)
+			continue
+		}
+
 		time.Sleep(5 * time.Second)
 	}
 }
