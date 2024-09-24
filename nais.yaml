@@ -19,4 +19,3 @@ spec:
   gcp:
     buckets:
       - name: n415-troll-guests
-        retentionPeriodDays: 2
